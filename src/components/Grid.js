@@ -1,18 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Grid = () => {
     const [isRunning, setIsRunning] = useState(false);
-
     const [gridSize, setGridSize] = useState({
         gridWidth: 64,
         gridHeight: 64
     })
+    const [myGrid, setMyGrid] = useState([]);
+    const [submitted, setSubmitted] = useState(false);
+    // const [gridArray, setGridArray] = useState();
 
-    const showGrid = () => {
+    useEffect(() =>{
+        setupGrid();
+    }, [])
+
+    const showGrid =() => {
+        console.log(myGrid);
+        return myGrid.map((item, i) => {
+            return item.map((spot, k) => {
+                return Draw(k);
+            })
+            
+        })
+    }
+
+    const setupGrid = () => {
+        let width = parseInt(gridSize.gridWidth, 10);
+        let height = parseInt(gridSize.gridHeight, 10);
+        const newGrid = [];
+
+        // for(let i=0; i < newGrid.length; i++){
+        //     newGrid[i] = new Array(height);
+        //     for(let j=0; j < height; j++){
+        //         Draw();
+        //         newGrid[i][j] = 0;
+        //     }
+        // }
+
+        for(let i = 0; i < width; i++){
+            newGrid.push(Array.from(Array(height), () => 0))
+        }
+
+        setMyGrid(newGrid);
+        // return newGrid;
+    }
+
+    const Draw = (key) => {
+        console.log("Drawing")
+        return(
+            <div key={key} style={{width: 10, 
+            height: 10, 
+            backgroundColor: 'lightblue',
+            border: "solid 1px black"
+        }}></div>
+        )
 
     }
 
     const handleChange = (e) => {
+        // setSubmitted(false);
         setGridSize({
             ...gridSize, [e.target.name]: e.target.value
         })
@@ -20,7 +66,9 @@ const Grid = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(e.target.value);
+        console.log(gridSize);
+        // setSubmitted(true);
+        setupGrid();
     }
 
     return(
@@ -37,7 +85,10 @@ const Grid = () => {
                 <input type="submit" value="Submit"/>
             </fieldset>
             </form>
-            {showGrid()}
+            <div style={{paddingTop: 50, justifyContent: 'center', display: 'grid', gridTemplateColumns: `repeat(${gridSize.gridWidth}, 10px)`}}>
+                {/* {submitted ? showGrid() : null} */}
+                {showGrid()}
+            </div>
         </div>
     )
 }
