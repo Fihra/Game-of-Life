@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import produce from 'immer';
 
 const Grid = () => {
     const [isRunning, setIsRunning] = useState(false);
@@ -8,10 +9,71 @@ const Grid = () => {
     })
     const [myGrid, setMyGrid] = useState([]);
     const [submitted, setSubmitted] = useState(false);
-    // const [gridArray, setGridArray] = useState();
 
     useEffect(() =>{
         setupGrid();
+    }, [])
+
+
+    const checkNeighbors = [
+        [0, 1],
+        [0, -1],
+        [1, -1],
+        [-1, 1],
+        [1, 1],
+        [-1, -1],
+        [1, 0],
+        [-1, 0]
+    ]
+
+
+    const runningRef = useRef();
+    runningRef.current = isRunning;
+
+    const runGameOfLife = useCallback(() => {
+        if(!runningRef.current){
+            return;
+        }
+        console.log("on");
+
+        let width = parseInt(gridSize.gridWidth);
+        let height = parseInt(gridSize.gridHeight);
+
+        setMyGrid(myGrid => { 
+            return produce(myGrid, gridCopy => {
+                for(let i =0; i < width;i++){
+                    for(let j=0; j < height; j++){
+                        let neighbors = 0;
+
+                        for(let n in checkNeighbors){
+                            const newI = i + checkNeighbors[n][0];
+                            const newJ = j + checkNeighbors[n][1];
+
+                            if((newI >= 0) && (newI < width) && (newJ >= 0) && (newJ < height)){
+                                neighbors += myGrid[newI][newJ];
+                            }
+                        }
+                        
+                        //If there are less than 2 neighbors
+                        //or more than 3 neighbors, delete cell
+                        if(neighbors < 2 || neighbors > 3) {
+                            gridCopy[i][j] = 0; 
+                        }
+
+                        //If cell is empty and there are exactly 3 neighbors
+                        //fill in new cell
+                        if((myGrid[i][j] === 0) && neighbors === 3){
+                            gridCopy[i][j] = 1;
+                        }
+                    }
+                }
+            }
+
+            )
+            }
+        )
+
+        setTimeout(runGameOfLife, 100);
     }, [])
 
     const showGrid =() => {
@@ -19,8 +81,7 @@ const Grid = () => {
         return myGrid.map((item, i) => {
             return item.map((spot, k) => {
                 return Draw(i, k);
-            })
-            
+            })        
         })
     }
 
@@ -38,13 +99,11 @@ const Grid = () => {
 
     const changeBox = (i, key) => {
         let updateGrid = [...myGrid];
-        console.log("here")
         updateGrid[i][key] = updateGrid[i][key] ? 0: 1;
         setMyGrid(updateGrid);
     }
 
     const Draw = (i, key) => {
-        console.log("Drawing")
         return(
             <div key={`${i}-${key}`} 
             onClick={() => changeBox(i, key)}
@@ -73,7 +132,7 @@ const Grid = () => {
 
     return(
         <div>
-            <button onClick={() =>setIsRunning(!isRunning)}>{isRunning ? "Stop" : "Start"}</button>
+            <button onClick={() => {setIsRunning(!isRunning);runGameOfLife()}}>{isRunning ? "Stop" : "Start"}</button>
         
             <form onSubmit={handleSubmit}>
             <fieldset>
