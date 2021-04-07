@@ -18,7 +18,7 @@ const Grid = () => {
         console.log(myGrid);
         return myGrid.map((item, i) => {
             return item.map((spot, k) => {
-                return Draw(k);
+                return Draw(i, k);
             })
             
         })
@@ -29,28 +29,28 @@ const Grid = () => {
         let height = parseInt(gridSize.gridHeight, 10);
         const newGrid = [];
 
-        // for(let i=0; i < newGrid.length; i++){
-        //     newGrid[i] = new Array(height);
-        //     for(let j=0; j < height; j++){
-        //         Draw();
-        //         newGrid[i][j] = 0;
-        //     }
-        // }
-
         for(let i = 0; i < width; i++){
             newGrid.push(Array.from(Array(height), () => 0))
         }
 
         setMyGrid(newGrid);
-        // return newGrid;
     }
 
-    const Draw = (key) => {
+    const changeBox = (i, key) => {
+        let updateGrid = [...myGrid];
+        console.log("here")
+        updateGrid[i][key] = updateGrid[i][key] ? 0: 1;
+        setMyGrid(updateGrid);
+    }
+
+    const Draw = (i, key) => {
         console.log("Drawing")
         return(
-            <div key={key} style={{width: 10, 
+            <div key={`${i}-${key}`} 
+            onClick={() => changeBox(i, key)}
+            style={{width: 10, 
             height: 10, 
-            backgroundColor: 'lightblue',
+            backgroundColor: myGrid[i][key] ? 'green' :'lightblue',
             border: "solid 1px black"
         }}></div>
         )
