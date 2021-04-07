@@ -1,29 +1,40 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import produce from 'immer';
 
+const initialSize = {};
+
 const Grid = () => {
     const [isRunning, setIsRunning] = useState(false);
-    const [gridSize, setGridSize] = useState({
-        gridWidth: 64,
-        gridHeight: 64
-    })
+    const [gridSize, setGridSize] = useState(initialSize)
     const [myGrid, setMyGrid] = useState([]);
     const [submitted, setSubmitted] = useState(false);
 
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    const createSound = () => {
+        const osc = audioContext.createOscillator();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(440, audioContext.currentTime);
+        osc.connect(audioContext.destination);
+        console.log(osc);
+        osc.releaseTime = 0.5;
+        osc.start();
+        osc.stop(1);
+        // osc.disconnect(audioContext.destination);
+    }
     useEffect(() =>{
         setupGrid();
     }, [])
 
-
     const checkNeighbors = [
-        [0, 1],
-        [0, -1],
-        [1, -1],
-        [-1, 1],
-        [1, 1],
-        [-1, -1],
-        [1, 0],
-        [-1, 0]
+        [0, 1], //right
+        [0, -1],//left
+        [1, -1],//top left
+        [-1, 1],//bottom right
+        [1, 1],//top right
+        [-1, -1],//bottom left
+        [1, 0],//top
+        [-1, 0]//bottom
     ]
 
 
@@ -35,12 +46,19 @@ const Grid = () => {
             return;
         }
         console.log("on");
-
-        let width = parseInt(gridSize.gridWidth);
-        let height = parseInt(gridSize.gridHeight);
+        console.log(gridSize);
+        // let width = gridSize.gridWidth;
+        // let height = gridSize.gridHeight;
+        // console.log("width: ", width);
+        // console.log("height: ", height);
 
         setMyGrid(myGrid => { 
+            let width = myGrid.length;
+            let height = myGrid[0].length;
+
             return produce(myGrid, gridCopy => {
+                console.log("new myGrid: ", myGrid);
+
                 for(let i =0; i < width;i++){
                     for(let j=0; j < height; j++){
                         let neighbors = 0;
@@ -94,10 +112,17 @@ const Grid = () => {
             newGrid.push(Array.from(Array(height), () => 0))
         }
 
+        setGridSize({
+            gridSize: {
+                gridWidth: width,
+                gridHeight: height
+            }
+        })
         setMyGrid(newGrid);
     }
 
     const changeBox = (i, key) => {
+        // createSound();
         let updateGrid = [...myGrid];
         updateGrid[i][key] = updateGrid[i][key] ? 0: 1;
         setMyGrid(updateGrid);
@@ -119,12 +144,34 @@ const Grid = () => {
     const handleChange = (e) => {
         // setSubmitted(false);
         setGridSize({
-            ...gridSize, [e.target.name]: e.target.value
+            ...gridSize, [e.target.name]: parseInt(e.target.value)
+        })
+        console.log(gridSize);
+    }
+
+    const handleWidthChange = (e) => {
+        setGridSize({
+            ...gridSize,
+            gridWidth: parseInt(e.target.value) 
+        })
+    }
+
+    const handleHeightChange = (e) => {
+        setGridSize({
+            ...gridSize,
+            gridHeight: parseInt(e.target.value) 
         })
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(gridSize);
+        setGridSize({
+            gridSize: {
+                gridWidth: gridSize.gridWidth,
+                gridHeight: gridSize.gridHeight
+            } 
+        })
         console.log(gridSize);
         // setSubmitted(true);
         setupGrid();
@@ -133,6 +180,9 @@ const Grid = () => {
     return(
         <div>
             <button onClick={() => {setIsRunning(!isRunning);runGameOfLife()}}>{isRunning ? "Stop" : "Start"}</button>
+
+            <button>Save</button>
+            <button>Load</button>
         
             <form onSubmit={handleSubmit}>
             <fieldset>
