@@ -8,6 +8,8 @@ const Grid = () => {
     const [isRunning, setIsRunning] = useState(false);
     const [gridSize, setGridSize] = useState(initialSize)
     const [myGrid, setMyGrid] = useState([]);
+    const [counter, setCounter] = useState(0);
+    const [allGrids, setAllGrids] = useState([]);
 
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -28,29 +30,35 @@ const Grid = () => {
         axios.get("http://localhost:3001/gridsAPI")
             .then(resp => {
                 const {gridWidth, gridHeight, myGrid} = resp.data[0];
-                let gridSplit = JSON.parse(myGrid).split("|");
-                
-                const tempGrid = [];
-                const tempGridSize = {
-                    gridWidth: gridWidth,
-                    gridHeight: gridHeight
-                }
+                const tempGrid = convertGrid(myGrid);          
+                const tempGridSize = returnGridSize(gridWidth, gridHeight);
 
-                gridSplit.forEach((row) => {
-                    let convertedRow = row.split("-");
-                    let eachNum = convertedRow.map((num) => {
-                        return parseInt(num);
-                    })
-                    // console.log(eachNum);
-                    tempGrid.push(eachNum);
-                })
-
-                // console.log(gridWidth);
+                setAllGrids(resp.data);
                 setGridSize(tempGridSize);
                 setMyGrid(tempGrid);
-
             })
+    }
 
+    const returnGridSize = (gridWidth, gridHeight) => {
+        const tempGridSize = {
+            gridWidth: gridWidth,
+            gridHeight: gridHeight
+        }
+        return tempGridSize;
+    }
+
+    const convertGrid = (inputGrid) => {
+        let gridParsed = JSON.parse(inputGrid).split("|");
+
+        const tempGrid = [];
+        gridParsed.forEach((row) => {
+            let convertedRow = row.split("-");
+            let eachNum = convertedRow.map((num) => {
+                return parseInt(num);
+            })
+            tempGrid.push(eachNum);
+        })
+        return tempGrid;
     }
 
     useEffect(() =>{
@@ -81,17 +89,21 @@ const Grid = () => {
         console.log("on");
 
         setMyGrid(myGrid => { 
+            //get width & height length of current Grid
             let width = myGrid.length;
             let height = myGrid[0].length;
 
             return produce(myGrid, gridCopy => {
-                console.log("new myGrid: ", myGrid);
-
+                //Iterate through the width of the grid
                 for(let i =0; i < width;i++){
+                    //Iterate through the height, which would be each element
                     for(let j=0; j < height; j++){
+                        //keep track of the number of neighbors for the current element
                         let neighbors = 0;
-
+                        
                         for(let n in checkNeighbors){
+                            //using the checkNeighbors checker object
+                            //add 
                             const newI = i + checkNeighbors[n][0];
                             const newJ = j + checkNeighbors[n][1];
 
@@ -198,6 +210,18 @@ const Grid = () => {
             })
     }
 
+    const loadNextGrid = () => {
+        console.log(allGrids[counter]);
+        console.log(counter);
+        let tempCounter = counter;
+        tempCounter+=1;
+        if(tempCounter >= allGrids.length){
+            tempCounter = 0;
+        }
+        // setMyGrid(allGrids[tempCounter]);
+        setCounter(tempCounter);
+    }
+
     const handleChange = (e) => {
         setGridSize({
             ...gridSize, [e.target.name]: parseInt(e.target.value)
@@ -221,9 +245,8 @@ const Grid = () => {
     return(
         <div>
             <button className="btn" onClick={() => {setIsRunning(!isRunning);runGameOfLife()}}>{isRunning ? "Stop" : "Start"}</button>
-
             <button className="btn" onClick={() => saveGrid()}>Save</button>
-            <button className="btn">Load</button>
+            <button className="btn" onClick={() => loadNextGrid()}>Load</button>
         
             <form onSubmit={handleSubmit}>
             <fieldset>
