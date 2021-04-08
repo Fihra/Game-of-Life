@@ -35,12 +35,12 @@ Instructions to run program:
 5. Create Database called "GridsDB" with a collection named "grids"
 ----
 6. In "grids" collection, click Insert Document
-7. Copy the following lines for the key-value entry:/
-   {
+7. Copy the following lines for the key-value entry:
+   ```{
     gridWidth: 10,
     gridHeight: 10,
     myGrid: "0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0"
-   }
+   }```
 8. Click Insert
 9. Click the Refresh button (Next to where it says "Displaying documents 1-n of n")
 ---- 
