@@ -37,6 +37,10 @@
   }
 }
 
+body {
+  background-color: #d4e8ff;
+}
+
 .grid-container {
   display: grid;
 }

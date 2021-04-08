@@ -8,7 +8,6 @@ const Grid = () => {
     const [isRunning, setIsRunning] = useState(false);
     const [gridSize, setGridSize] = useState(initialSize)
     const [myGrid, setMyGrid] = useState([]);
-    const [submitted, setSubmitted] = useState(false);
 
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -23,7 +22,34 @@ const Grid = () => {
         osc.stop(1);
         // osc.disconnect(audioContext.destination);
     }
+
+    const firstGridLoad = () => {
+        axios.get("http://localhost:3001/gridsAPI")
+            .then(resp => {
+                const {gridWidth, gridHeight, myGrid} = resp.data[0];
+                let gridSplit = JSON.parse(myGrid).split("|");
+                
+                const tempGrid = [];
+
+                gridSplit.forEach((row) => {
+                    let convertedRow = row.split("-");
+                    let eachNum = convertedRow.map((num) => {
+                        return parseInt(num);
+                    })
+                    // console.log(eachNum);
+                    tempGrid.push(eachNum);
+                })
+
+                console.log(tempGrid);
+                setMyGrid(tempGrid);
+
+            })
+
+    }
+
     useEffect(() =>{
+        firstGridLoad();
+
         setupGrid();
     }, [])
 
@@ -47,11 +73,6 @@ const Grid = () => {
             return;
         }
         console.log("on");
-        console.log(gridSize);
-        // let width = gridSize.gridWidth;
-        // let height = gridSize.gridHeight;
-        // console.log("width: ", width);
-        // console.log("height: ", height);
 
         setMyGrid(myGrid => { 
             let width = myGrid.length;
@@ -105,6 +126,7 @@ const Grid = () => {
     }
 
     const setupGrid = () => {
+        console.log(gridSize);
         let width = parseInt(gridSize.gridWidth, 10);
         let height = parseInt(gridSize.gridHeight, 10);
         const newGrid = [];
@@ -156,8 +178,6 @@ const Grid = () => {
         let gridCopy = [...myGrid];
         const gridString = convertGridToString(gridCopy);
 
-        // console.log(JSON.stringify(gridString));
-
         const gridObject = {
             gridWidth: width,
             gridHeight: height,
@@ -173,7 +193,6 @@ const Grid = () => {
     }
 
     const handleChange = (e) => {
-        // setSubmitted(false);
         setGridSize({
             ...gridSize, [e.target.name]: parseInt(e.target.value)
         })
@@ -190,7 +209,6 @@ const Grid = () => {
             } 
         })
         console.log(gridSize);
-        // setSubmitted(true);
         setupGrid();
     }
 
@@ -212,7 +230,6 @@ const Grid = () => {
             </fieldset>
             </form>
             <div style={{paddingTop: 50, justifyContent: 'center', display: 'grid', gridTemplateColumns: `repeat(${gridSize.gridWidth}, 10px)`}}>
-                {/* {submitted ? showGrid() : null} */}
                 {showGrid()}
             </div>
         </div>
