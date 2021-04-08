@@ -135,7 +135,6 @@ const Grid = () => {
     }, [])
 
     const showGrid =() => {
-        console.log(myGrid);
         return myGrid.map((item, i) => {
             return item.map((spot, k) => {
                 return Draw(i, k);
@@ -218,6 +217,17 @@ const Grid = () => {
         if(tempCounter >= allGrids.length){
             tempCounter = 0;
         }
+
+        const { gridWidth, gridHeight, myGrid } = allGrids[tempCounter];
+        console.log("width: ", gridWidth)
+        console.log("height: ", gridHeight)
+        console.log("grid: ", myGrid)
+        const tempGrid = convertGrid(myGrid);          
+        const tempGridSize = returnGridSize(gridWidth, gridHeight);
+
+        setGridSize(tempGridSize);
+        setMyGrid(tempGrid);
+
         // setMyGrid(allGrids[tempCounter]);
         setCounter(tempCounter);
     }
