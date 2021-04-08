@@ -2,11 +2,9 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import produce from 'immer';
 import axios from 'axios';
 
-const initialSize = {};
-
 const Grid = () => {
     const [isRunning, setIsRunning] = useState(false);
-    const [gridSize, setGridSize] = useState(initialSize)
+    const [gridSize, setGridSize] = useState({})
     const [myGrid, setMyGrid] = useState([]);
     const [counter, setCounter] = useState(0);
     const [allGrids, setAllGrids] = useState([]);
