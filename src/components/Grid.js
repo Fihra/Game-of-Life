@@ -19,19 +19,15 @@ const Grid = () => {
         osc.type = 'sine';
 
         let randomNote = Math.floor(Math.random() * (500 - 200) + 200);
-
         osc.frequency.setValueAtTime(randomNote, audioContext.currentTime);
-        // osc.linearRampToValueAtTime(0, 0.1, 0.5);
         osc.connect(gainNode);
         
         gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
         gainNode.gain.value = 0.1;
         
         gainNode.connect(audioContext.destination);
-        // osc.releaseTime = 0.5;
         osc.start();
         osc.stop(1);
-        // osc.disconnect(audioContext.destination);
     }
 
     const runSound = () => {
@@ -90,7 +86,6 @@ const Grid = () => {
 
     useEffect(() =>{
         firstGridLoad();
-        console.log(gridSize);
         setupGrid();
     }, [])
 
@@ -113,7 +108,6 @@ const Grid = () => {
         if(!runningRef.current){
             return;
         }
-        console.log("on");
 
         setMyGrid(myGrid => { 
             //get width & height length of current Grid
@@ -130,7 +124,6 @@ const Grid = () => {
                         
                         for(let n in checkNeighbors){
                             //using the checkNeighbors checker object
-                            //add 
                             const newI = i + checkNeighbors[n][0];
                             const newJ = j + checkNeighbors[n][1];
 
@@ -184,7 +177,6 @@ const Grid = () => {
                 gridHeight: height
             }
         })
-        console.log(gridSize);
         setMyGrid(newGrid);
     }
 
@@ -237,8 +229,6 @@ const Grid = () => {
     }
 
     const loadNextGrid = () => {
-        console.log(allGrids[counter]);
-        console.log(counter);
         let tempCounter = counter;
         tempCounter+=1;
         if(tempCounter >= allGrids.length){
@@ -246,16 +236,11 @@ const Grid = () => {
         }
 
         const { gridWidth, gridHeight, myGrid } = allGrids[tempCounter];
-        console.log("width: ", gridWidth)
-        console.log("height: ", gridHeight)
-        console.log("grid: ", myGrid)
         const tempGrid = convertGrid(myGrid);          
         const tempGridSize = returnGridSize(gridWidth, gridHeight);
 
         setGridSize(tempGridSize);
         setMyGrid(tempGrid);
-
-        // setMyGrid(allGrids[tempCounter]);
         setCounter(tempCounter);
     }
 
@@ -263,19 +248,16 @@ const Grid = () => {
         setGridSize({
             ...gridSize, [e.target.name]: parseInt(e.target.value)
         })
-        console.log(gridSize);
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(gridSize);
         setGridSize({
             gridSize: {
                 gridWidth: gridSize.gridWidth,
                 gridHeight: gridSize.gridHeight
             } 
         })
-        console.log(gridSize);
         setupGrid();
     }
 
