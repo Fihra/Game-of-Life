@@ -42,6 +42,7 @@ Instructions to run program:
     myGrid: "0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0"
 8. Click Insert
 9. Click the Refresh button (Next to where it says "Displaying documents 1-n of n")
----- This should generate the starting default grid
+---- 
+(Steps 6-9 This generate sthe starting default grid)
 10. npm start (this should also connect to the database when you have started the connection on MongoDB)
 
