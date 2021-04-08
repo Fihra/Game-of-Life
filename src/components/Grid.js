@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import produce from 'immer';
+import axios from 'axios';
 
 const initialSize = {};
 
@@ -141,26 +142,42 @@ const Grid = () => {
 
     }
 
+    const convertGridToString = (gridCopy) =>{
+        return gridCopy.map((g) => {
+            return g.join("-");
+        }).join("|");
+    }
+
+    const saveGrid = () => {
+        console.log(myGrid);
+        let width = myGrid.length;
+        let height = myGrid[0].length;
+
+        let gridCopy = [...myGrid];
+        const gridString = convertGridToString(gridCopy);
+
+        // console.log(JSON.stringify(gridString));
+
+        const gridObject = {
+            gridWidth: width,
+            gridHeight: height,
+            myGrid: JSON.stringify(gridString)
+        }
+
+        axios.post('http://localhost:3001/gridsAPI/new', gridObject)
+            .then((res) => {
+                console.log(res.data)
+            }).catch((error) => {
+                console.log(error);
+            })
+    }
+
     const handleChange = (e) => {
         // setSubmitted(false);
         setGridSize({
             ...gridSize, [e.target.name]: parseInt(e.target.value)
         })
         console.log(gridSize);
-    }
-
-    const handleWidthChange = (e) => {
-        setGridSize({
-            ...gridSize,
-            gridWidth: parseInt(e.target.value) 
-        })
-    }
-
-    const handleHeightChange = (e) => {
-        setGridSize({
-            ...gridSize,
-            gridHeight: parseInt(e.target.value) 
-        })
     }
 
     const handleSubmit = (e) => {
@@ -179,10 +196,10 @@ const Grid = () => {
 
     return(
         <div>
-            <button onClick={() => {setIsRunning(!isRunning);runGameOfLife()}}>{isRunning ? "Stop" : "Start"}</button>
+            <button className="btn" onClick={() => {setIsRunning(!isRunning);runGameOfLife()}}>{isRunning ? "Stop" : "Start"}</button>
 
-            <button>Save</button>
-            <button>Load</button>
+            <button className="btn" onClick={() => saveGrid()}>Save</button>
+            <button className="btn">Load</button>
         
             <form onSubmit={handleSubmit}>
             <fieldset>
@@ -191,7 +208,7 @@ const Grid = () => {
                 <input type="number" id="gridWidth" name="gridWidth" value={gridSize.gridWidth} onChange={handleChange}/>
                 <label htmlFor="gridHeight">Grid Height:</label>
                 <input type="number" id="gridHeight" name="gridHeight" value={gridSize.gridHeight} onChange={handleChange}/>
-                <input type="submit" value="Submit"/>
+                <input className="btn" type="submit" value="Submit"/>
             </fieldset>
             </form>
             <div style={{paddingTop: 50, justifyContent: 'center', display: 'grid', gridTemplateColumns: `repeat(${gridSize.gridWidth}, 10px)`}}>
