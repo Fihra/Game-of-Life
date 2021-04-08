@@ -40,7 +40,7 @@ Instructions to run program:
     gridWidth: 10,
     gridHeight: 10,
     myGrid: "0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0"
-   }```
+   }
 8. Click Insert
 9. Click the Refresh button (Next to where it says "Displaying documents 1-n of n")
 ---- 
