@@ -22,7 +22,7 @@ Instructions to run program:
 4. npm start
 
 May have to install MongoDB to run your own server.
-https://www.mongodb.com/
+Download here: https://www.mongodb.com/
 
 Instructions to run program:
 1. Clone Project or Fork Project: git clone https://github.com/Fihra/Game-Of-Life-Backend
