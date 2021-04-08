@@ -43,6 +43,6 @@ Instructions to run program:
 8. Click Insert
 9. Click the Refresh button (Next to where it says "Displaying documents 1-n of n")
 ---- 
-(Steps 6-9 This generate sthe starting default grid)\
+(Steps 6-9 This generates the starting default grid)\
 10. npm start (this should also connect to the database when you have started the connection on MongoDB)
 
