@@ -33,4 +33,15 @@ Instructions to run program:
 3. npm install
 4. Open MongoDB program (MongoDB Compass Community) & start a new local host connection (mines defaults to localhost, port 27017)
 5. Create Database called "GridsDB" with a collection named "grids"
-7. npm start (this should also connect to the database when you have started the connection on MongoDB)
+----
+6. In "grids" collection, click Insert Document
+7. Copy the following lines for the key-value entry:
+   {
+    gridWidth: 10,
+    gridHeight: 10,
+    myGrid: "0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0|0-0-0-0-0-0-0-0-0-0"
+8. Click Insert
+9. Click the Refresh button (Next to where it says "Displaying documents 1-n of n")
+---- This should generate the starting default grid
+10. npm start (this should also connect to the database when you have started the connection on MongoDB)
+
