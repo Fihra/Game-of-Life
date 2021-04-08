@@ -24,12 +24,17 @@ const Grid = () => {
     }
 
     const firstGridLoad = () => {
+        
         axios.get("http://localhost:3001/gridsAPI")
             .then(resp => {
                 const {gridWidth, gridHeight, myGrid} = resp.data[0];
                 let gridSplit = JSON.parse(myGrid).split("|");
                 
                 const tempGrid = [];
+                const tempGridSize = {
+                    gridWidth: gridWidth,
+                    gridHeight: gridHeight
+                }
 
                 gridSplit.forEach((row) => {
                     let convertedRow = row.split("-");
@@ -40,7 +45,8 @@ const Grid = () => {
                     tempGrid.push(eachNum);
                 })
 
-                console.log(tempGrid);
+                // console.log(gridWidth);
+                setGridSize(tempGridSize);
                 setMyGrid(tempGrid);
 
             })
@@ -49,7 +55,7 @@ const Grid = () => {
 
     useEffect(() =>{
         firstGridLoad();
-
+        console.log(gridSize);
         setupGrid();
     }, [])
 
@@ -126,7 +132,6 @@ const Grid = () => {
     }
 
     const setupGrid = () => {
-        console.log(gridSize);
         let width = parseInt(gridSize.gridWidth, 10);
         let height = parseInt(gridSize.gridHeight, 10);
         const newGrid = [];
@@ -141,6 +146,7 @@ const Grid = () => {
                 gridHeight: height
             }
         })
+        console.log(gridSize);
         setMyGrid(newGrid);
     }
 
