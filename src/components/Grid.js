@@ -12,17 +12,44 @@ const Grid = () => {
     const [allGrids, setAllGrids] = useState([]);
 
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const gainNode = audioContext.createGain();
 
-    const createSound = () => {
+    const playSound = () => {
         const osc = audioContext.createOscillator();
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(440, audioContext.currentTime);
-        osc.connect(audioContext.destination);
-        console.log(osc);
-        osc.releaseTime = 0.5;
+        osc.type = 'sine';
+
+        let randomNote = Math.floor(Math.random() * (500 - 200) + 200);
+
+        osc.frequency.setValueAtTime(randomNote, audioContext.currentTime);
+        // osc.linearRampToValueAtTime(0, 0.1, 0.5);
+        osc.connect(gainNode);
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.value = 0.1;
+        
+        gainNode.connect(audioContext.destination);
+        // osc.releaseTime = 0.5;
         osc.start();
         osc.stop(1);
         // osc.disconnect(audioContext.destination);
+    }
+
+    const runSound = () => {
+        const osc = audioContext.createOscillator();
+        osc.type = "square";
+
+        if(isRunning){
+            osc.frequency.value = 108;
+        } else {
+            osc.frequency.value = 100;
+        }
+
+        osc.connect(gainNode);
+        gainNode.gain.value = 0.1;
+        gainNode.connect(audioContext.destination);
+        osc.start();
+        osc.stop(1);
+        
     }
 
     const firstGridLoad = () => {
@@ -162,7 +189,7 @@ const Grid = () => {
     }
 
     const changeBox = (i, key) => {
-        // createSound();
+        playSound();
         let updateGrid = [...myGrid];
         updateGrid[i][key] = updateGrid[i][key] ? 0: 1;
         setMyGrid(updateGrid);
@@ -254,7 +281,7 @@ const Grid = () => {
 
     return(
         <div>
-            <button className="btn" onClick={() => {setIsRunning(!isRunning);runGameOfLife()}}>{isRunning ? "Stop" : "Start"}</button>
+            <button className="btn" onClick={() => {setIsRunning(!isRunning);runGameOfLife(); runSound()}}>{isRunning ? "Stop" : "Start"}</button>
             <button className="btn" onClick={() => saveGrid()}>Save</button>
             <button className="btn" onClick={() => loadNextGrid()}>Load</button>
         
