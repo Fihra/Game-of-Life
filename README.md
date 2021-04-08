@@ -12,3 +12,5 @@ Technologies used to build this:
 ![Game of Life Project](Game_Of_Life_Coding.png)
 
 [Backend Repo Here](https://github.com/Fihra/Game-Of-Life-Backend)
+
+Built by Fabian Fabro.
